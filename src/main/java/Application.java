@@ -1,9 +1,11 @@
+import com.sun.org.apache.regexp.internal.RE;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Application {
@@ -36,8 +38,9 @@ public class Application {
     }
 
     // count
-    public int executeSQL01() {
-        return 1_000_000;
+    public long executeSQL01() {
+        long count = records.stream().count();
+        return count;
     }
 
     // count, where

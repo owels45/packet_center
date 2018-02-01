@@ -12,6 +12,7 @@ public class ApplicationTest {
     @Before
     public void init(){
         app.getRecords();
+        app.execute();
     }
 
     @Test

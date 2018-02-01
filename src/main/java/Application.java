@@ -1,106 +1,104 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Application {
-    private ArrayList<String> packetSizes;
-    private ArrayList<String> sourceList;
-    private ArrayList<String> destinationList;
-    private ArrayList<Record> records;
+    private List<Record> records = new ArrayList<>();
 
-    public Application() {
-        packetSizes = new ArrayList<>();
-        sourceList = new ArrayList<>();
-        destinationList = new ArrayList<>();
-        records = new ArrayList<>();
-    }
-
-    public void initPacketSizes() {
-        packetSizes.add("S");
-        packetSizes.add("M");
-        packetSizes.add("L");
-    }
-
-    public void initSourceList() {
-        sourceList.add("A");
-        sourceList.add("B");
-        sourceList.add("C");
-        sourceList.add("D");
-        sourceList.add("E");
-        sourceList.add("F");
-        sourceList.add("G");
-        sourceList.add("H");
-        sourceList.add("I");
-        sourceList.add("J");
-    }
-
-    public void initDestinationList() {
-        destinationList.add("A");
-        destinationList.add("B");
-        destinationList.add("C");
-        destinationList.add("D");
-        destinationList.add("E");
-        destinationList.add("F");
-        destinationList.add("G");
-        destinationList.add("H");
-        destinationList.add("I");
-        destinationList.add("J");
-    }
-
-    public void generateRecords() {
-        for (int i = 0;i < Configuration.instance.maximumNumberOfRecords;i++) {
-            String randomPacketSize = packetSizes.get(Configuration.instance.randomNumberGenerator.nextInt(0,packetSizes.size()-1));
-            int randomWeight = Configuration.instance.randomNumberGenerator.nextInt(500,5000);
-
-            int randomIndexSource = Configuration.instance.randomNumberGenerator.nextInt(0,sourceList.size()-1);
-            String randomSource = sourceList.get(randomIndexSource);
-
-            int randomIndexDestination;
-
-            do {
-                randomIndexDestination = Configuration.instance.randomNumberGenerator.nextInt(0,destinationList.size()-1);
-            } while (randomIndexDestination == randomIndexSource);
-
-            String randomDestination = destinationList.get(randomIndexDestination);
-
-            boolean isExpress = false;
-            if (Configuration.instance.randomNumberGenerator.nextDouble() <= Configuration.instance.ratioExpress)
-                isExpress = true;
-
-            boolean isValue = false;
-            if (Configuration.instance.randomNumberGenerator.nextDouble() <= Configuration.instance.ratioValue)
-                isValue = true;
-
-            boolean isFragile = false;
-            if (Configuration.instance.randomNumberGenerator.nextDouble() <= Configuration.instance.ratioFragile)
-                isFragile = true;
-
-            Record record = new Record(i+1,randomPacketSize,randomWeight,randomSource,randomDestination,isExpress,isValue,isFragile);
-            records.add(record);
-        }
-    }
-
-    public void generateToCSVFile() {
+    public void importCSVFile(String fileName) {
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(Configuration.instance.dataPath + "records.csv")));
-
-            for (int i = 0;i < Configuration.instance.maximumNumberOfRecords;i++)
-                bufferedWriter.write(records.get(i).toString() + Configuration.instance.lineSeparator);
-
-            bufferedWriter.close();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] strings = line.split(";");
+                Record r = new Record(
+                        Integer.parseInt(strings[0]),
+                        strings[1],
+                        Integer.parseInt(strings[2]),
+                        strings[3],
+                        strings[4],
+                        Boolean.parseBoolean(strings[5]),
+                        Boolean.parseBoolean(strings[6]),
+                        Boolean.parseBoolean(strings[7]));
+                records.add(r);
+            }
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
     }
 
+    // count
+    public void executeSQL01() {
+    }
+
+    // count, where
+    public void executeSQL02() {
+    }
+
+    // count, where, in
+    public void executeSQL03() {
+    }
+
+    // count, where, not in
+    public void executeSQL04() {
+    }
+
+    // id, where, in, order by desc limit
+    public void executeSQL05() {
+    }
+
+    // id, where, in, order by desc, order by asc
+    public void executeSQL06() {
+    }
+
+    // count, group by
+    public void executeSQL07() {
+    }
+
+    // count, where, group by
+    public void executeSQL08() {
+    }
+
+    // count, where, in, group by
+    public void executeSQL09() {
+    }
+
+    // count, where, not in, group by
+    public void executeSQL10() {
+    }
+
+    // sum, where, not in, in, group by
+    public void executeSQL11() {
+    }
+
+    // avg, where, in, in, group by
+    public void executeSQL12() {
+    }
+
+    public void execute() {
+        importCSVFile("data/records.csv");
+        executeSQL01();
+        executeSQL02();
+        executeSQL03();
+        executeSQL04();
+        executeSQL05();
+        executeSQL06();
+        executeSQL07();
+        executeSQL08();
+        executeSQL09();
+        executeSQL10();
+        executeSQL11();
+        executeSQL12();
+    }
+
     public static void main(String... args) {
-        // Application application = new Application();
-        // application.initPacketSizes();
-        // application.initSourceList();
-        // application.initDestinationList();
-        // application.generateRecords();
-        // application.generateToCSVFile();
+        Application app = new Application();
+        app.importCSVFile("data/records.csv");
+        System.out.println(app.records.get(0));
+        System.out.println(app.records.get(1));
     }
 }

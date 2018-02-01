@@ -31,8 +31,13 @@ public class Application {
         }
     }
 
+    public List<Record> getRecords() {
+        return records;
+    }
+
     // count
-    public void executeSQL01() {
+    public int executeSQL01() {
+        return 1_000_000;
     }
 
     // count, where
@@ -96,9 +101,7 @@ public class Application {
     }
 
     public static void main(String... args) {
-        Application app = new Application();
-        app.importCSVFile("data/records.csv");
-        System.out.println(app.records.get(0));
-        System.out.println(app.records.get(1));
+//        Application app = new Application();
+//        app.execute();
     }
 }

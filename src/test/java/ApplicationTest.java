@@ -2,6 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.*;
 
@@ -22,14 +23,17 @@ public class ApplicationTest {
 
     @Test
     public void executeSQL02() throws Exception {
+        assertEquals(11_115, app.executeSQL02());
     }
 
     @Test
     public void executeSQL03() throws Exception {
+        assertEquals(2_686, app.executeSQL03());
     }
 
     @Test
     public void executeSQL04() throws Exception {
+        assertEquals(1_343, app.executeSQL04());
     }
 
     @Test

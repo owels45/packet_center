@@ -1,15 +1,51 @@
 import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class Application {
     private List<Record> records = new ArrayList<>();
+
+    //Strings
+    private String strSource;
+    private Predicate<Record> recordWhereSourceEqualsStrSource = r -> r.getSource().equals(strSource);
+
+    private String strNotSource;
+    private Predicate<Record> recordWhereSourceEqualsStrNotSource = r -> !r.getSource().equals(strNotSource);
+
+    private ArrayList<String> listStr = new ArrayList<String>();
+    private Predicate<Record> recordWhereSourceContainsListStr = r -> listStr.contains(r.getSource());
+
+    private ArrayList<String> negativeListStr = new ArrayList<String>();
+    private Predicate<Record> recordWhereSourceNotContainsNegativeListStr = r -> !negativeListStr.contains(r.getSource());
+
+    private String strDestination;
+    private Predicate<Record> recordWhereDestinationEqualsStrDestination = r -> r.getDestination().equals(strDestination);
+
+    private String strSize;
+    private Predicate<Record> recordWhereSizeEqualsStrSize = r -> r.getSize().equals(strSize);
+
+    //ints
+    private int intWeightGET;
+    private Predicate<Record> recordWhereWeightIsGreaterEqualThanIntWeightGET = r -> r.getWeight() >= intWeightGET;
+
+    private int intWeightLET;
+    private Predicate<Record> recordWhereWeightIsLesserEqualThanIntWeightLET = r -> r.getWeight() <= intWeightLET;
+
+    //booleans
+    boolean boolIsExpress;
+    private Predicate<Record> recordWhereIsExpressEqualsBoolIsExpress = r -> r.isExpress() == boolIsExpress;
+
+    boolean boolIsValue;
+    private Predicate<Record> recordWhereIsValueEqualsBoolIsValue = r -> r.isValue() == boolIsValue;
+
+
 
     public void importCSVFile(String fileName) {
         try {
@@ -39,20 +75,63 @@ public class Application {
 
     // count
     public long executeSQL01() {
-        long count = records.stream().count();
-        return count;
+        return records.stream().count();
     }
 
     // count, where
-    public void executeSQL02() {
+    public long executeSQL02() {
+        strSource = "A";
+        strDestination = "D";
+        Stream<Record> stream = records.stream().filter(recordWhereSourceEqualsStrSource);
+        return stream.filter(recordWhereDestinationEqualsStrDestination).count();
     }
 
     // count, where, in
-    public void executeSQL03() {
+    public long executeSQL03() {
+        strSize = "S";
+        Stream<Record> stream = records.stream().filter(recordWhereSizeEqualsStrSize);
+
+        listStr.clear();
+        listStr.add("A");
+        listStr.add("B");
+        listStr.add("C");
+        stream = stream.filter(recordWhereSourceContainsListStr);
+
+        intWeightGET = 1000;
+        stream = stream.filter(recordWhereWeightIsGreaterEqualThanIntWeightGET);
+
+        intWeightLET = 2500;
+        stream = stream.filter(recordWhereWeightIsLesserEqualThanIntWeightLET);
+
+        boolIsExpress = true;
+        stream = stream.filter(recordWhereIsExpressEqualsBoolIsExpress);
+
+        return stream.count();
     }
 
     // count, where, not in
-    public void executeSQL04() {
+    public long executeSQL04() {
+        strSize = "L";
+        Stream<Record> stream = records.stream().filter(recordWhereSizeEqualsStrSize);
+
+        negativeListStr.clear();
+        negativeListStr.add("A");
+        negativeListStr.add("B");
+        stream = stream.filter(recordWhereSourceNotContainsNegativeListStr);
+
+        intWeightGET = 1250;
+        stream = stream.filter(recordWhereWeightIsGreaterEqualThanIntWeightGET);
+
+        intWeightLET = 3750;
+        stream = stream.filter(recordWhereWeightIsLesserEqualThanIntWeightLET);
+
+        boolIsExpress = false;
+        stream = stream.filter(recordWhereIsExpressEqualsBoolIsExpress);
+
+        boolIsValue = true;
+        stream = stream.filter(recordWhereIsValueEqualsBoolIsValue);
+
+        return stream.count();
     }
 
     // id, where, in, order by desc limit

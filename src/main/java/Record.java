@@ -27,4 +27,36 @@ public class Record {
         stringBuilder.append(isExpress).append(";").append(isValue).append(";").append(isFragile);
         return stringBuilder.toString();
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public boolean isExpress() {
+        return isExpress;
+    }
+
+    public boolean isValue() {
+        return isValue;
+    }
+
+    public boolean isFragile() {
+        return isFragile;
+    }
 }
